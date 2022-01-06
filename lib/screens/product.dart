@@ -27,14 +27,21 @@ class _ProductState extends State<Product> {
                       height: 40,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.thumb_up_sharp,
-                            size: 35,
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.brown.shade600,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Icon(
+                              Icons.chevron_left,
+                              size: 50,
+                            ),
                           ),
                         )
                       ],
