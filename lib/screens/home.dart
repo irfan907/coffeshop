@@ -156,125 +156,142 @@ class _HomeState extends State<Home> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Padding(
-                          padding: const EdgeInsets.all(9.0),
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('products')
-                                .where('uid', isEqualTo: this.loggedInUser.uid)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              return GridView.builder(
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 200,
-                                          childAspectRatio: 2 / 2,
-                                          crossAxisSpacing: 10,
-                                          mainAxisSpacing: 10),
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (BuildContext ctx, index) {
-                                    DocumentSnapshot product =
-                                        snapshot.data!.docs[index];
-                                    return Container(
-                                      alignment: Alignment.center,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Product()));
-                                        },
-                                        child: Card(
-                                          elevation: 5,
-                                          color: Colors.brown.shade400,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              FutureBuilder(
-                                                future: storage.downloadURL(
-                                                    product['picture']),
-                                                builder: (BuildContext context,
-                                                    AsyncSnapshot<String>
-                                                        snapshot) {
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .done &&
-                                                      snapshot.hasData) {
-                                                    return Container(
-                                                      height: 130,
-                                                      child: Image.network(
-                                                        snapshot.data!,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    );
-                                                  }
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .waiting ||
-                                                      !snapshot.hasData) {
-                                                    return CircularProgressIndicator();
-                                                  }
-                                                  return Container();
-                                                },
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 9),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          product['name'],
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white70,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                      SingleChildScrollView(
+                        child: Padding(
+                            padding: const EdgeInsets.all(9.0),
+                            child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('products')
+                                  .where('uid',
+                                      isEqualTo: this.loggedInUser.uid)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                return GridView.builder(
+                                    physics: ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                            maxCrossAxisExtent: 200,
+                                            childAspectRatio: 2 / 2,
+                                            crossAxisSpacing: 10,
+                                            mainAxisSpacing: 10),
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (BuildContext ctx, index) {
+                                      DocumentSnapshot product =
+                                          snapshot.data!.docs[index];
+                                      return Container(
+                                        alignment: Alignment.center,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Product(
+                                                            name:
+                                                                product['name'],
+                                                            price: product[
+                                                                'price'],
+                                                            description: product[
+                                                                'description'],
+                                                            volume: product[
+                                                                'volume'],
+                                                            picture: product[
+                                                                'picture'])));
+                                          },
+                                          child: Card(
+                                            elevation: 5,
+                                            color: Colors.brown.shade400,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                FutureBuilder(
+                                                  future: storage.downloadURL(
+                                                      product['picture']),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<String>
+                                                              snapshot) {
+                                                    if (snapshot.connectionState ==
+                                                            ConnectionState
+                                                                .done &&
+                                                        snapshot.hasData) {
+                                                      return Container(
+                                                        height: 130,
+                                                        child: Image.network(
+                                                          snapshot.data!,
+                                                          fit: BoxFit.contain,
                                                         ),
-                                                        Text(
-                                                          '\$18',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .brown
-                                                                  .shade900,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        )
-                                                      ],
+                                                      );
+                                                    }
+                                                    if (snapshot.connectionState ==
+                                                            ConnectionState
+                                                                .waiting ||
+                                                        !snapshot.hasData) {
+                                                      return CircularProgressIndicator();
+                                                    }
+                                                    return Container();
+                                                  },
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 9),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            product['name'],
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white70,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            '\$' +
+                                                                product[
+                                                                    'price'],
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .brown
+                                                                    .shade900,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  });
-                            },
-                          )),
+                                      );
+                                    });
+                              },
+                            )),
+                      ),
                     ],
                   ),
                 ),

@@ -1,54 +1,49 @@
+import 'package:coffeshop/screens/upload_image.dart';
 import 'package:flutter/material.dart';
 
-class Product extends StatefulWidget {
-  @override
-  _ProductState createState() => _ProductState();
-}
-
-class _ProductState extends State<Product> {
+class Product extends StatelessWidget {
+  final String name, price, description, volume, picture;
+  Product(
+      {Key? key,
+      required this.name,
+      required this.price,
+      required this.description,
+      required this.volume,
+      required this.picture})
+      : super(key: key);
+  Storage storage = Storage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           Container(
-              height: MediaQuery.of(context).size.height * 0.40,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.brown.shade400,
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/logo.png'),
-                      fit: BoxFit.contain)),
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
+            height: MediaQuery.of(context).size.height * 0.40,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.brown.shade400,
+            ),
+            child: FutureBuilder(
+              future: storage.downloadURL(picture),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  return Container(
+                    height: 130,
+                    child: Image.network(
+                      snapshot.data!,
+                      fit: BoxFit.contain,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.brown.shade600,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Icon(
-                              Icons.chevron_left,
-                              size: 50,
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    !snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                return Container();
+              },
+            ),
+          ),
           Expanded(
               child: Container(
             color: Colors.brown.shade900,
@@ -65,14 +60,14 @@ class _ProductState extends State<Product> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Name",
+                          '$name',
                           style: TextStyle(
                               color: Colors.white70,
                               fontSize: 30,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '\$18',
+                          '\$' + price,
                           style: TextStyle(
                               color: Colors.brown.shade200,
                               fontSize: 18,
@@ -88,9 +83,26 @@ class _ProductState extends State<Product> {
                     padding: const EdgeInsets.all(20.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco',
-                        style: TextStyle(color: Colors.white60, fontSize: 14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Description',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white60),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            description,
+                            style:
+                                TextStyle(color: Colors.white60, fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -112,7 +124,7 @@ class _ProductState extends State<Product> {
                           width: 10,
                         ),
                         Text(
-                          '32oz',
+                          '$volume oz',
                           style: TextStyle(
                               color: Colors.brown.shade300,
                               fontSize: 20,
