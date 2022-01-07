@@ -188,6 +188,7 @@ class _HomeState extends State<Home> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         Product(
+                                                            id: product.id,
                                                             name:
                                                                 product['name'],
                                                             price: product[
@@ -234,7 +235,10 @@ class _HomeState extends State<Home> {
                                                             ConnectionState
                                                                 .waiting ||
                                                         !snapshot.hasData) {
-                                                      return CircularProgressIndicator();
+                                                      return Expanded(
+                                                          child: Center(
+                                                              child:
+                                                                  CircularProgressIndicator()));
                                                     }
                                                     return Container();
                                                   },

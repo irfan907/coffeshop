@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffeshop/screens/home.dart';
 import 'package:coffeshop/screens/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +21,7 @@ class _LoginState extends State<Login> {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
+                Fluttertoast.showToast(msg: 'Logging in'),
                 saveTosharedPref(),
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => Home()))

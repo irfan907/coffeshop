@@ -6,7 +6,6 @@ import 'package:coffeshop/models/user_model.dart';
 import 'package:coffeshop/models/product_model.dart';
 import 'package:coffeshop/screens/home.dart';
 import 'package:coffeshop/screens/upload_image.dart';
-import 'package:path/path.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
@@ -102,8 +101,13 @@ class _UploadState extends State<Upload> {
     await firebaseFirestore
         .collection("products")
         .add(productModel.toMap())
-        .then((value) =>
-            {Fluttertoast.showToast(msg: "Product Uploaded Successfully")})
+        .then((value) => {
+              Fluttertoast.showToast(msg: "Product Uploaded Successfully"),
+              nameController.clear(),
+              priceController.clear(),
+              descriptionController.clear(),
+              volumeController.clear(),
+            })
         .catchError((e) => {Fluttertoast.showToast(msg: e!.message)});
   }
 

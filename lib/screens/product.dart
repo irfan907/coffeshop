@@ -1,20 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffeshop/screens/home.dart';
 import 'package:coffeshop/screens/upload_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Product extends StatelessWidget {
-  final String name, price, description, volume, picture;
+  final String id, name, price, description, volume, picture;
   Product(
       {Key? key,
+      required this.id,
       required this.name,
       required this.price,
       required this.description,
       required this.volume,
       required this.picture})
       : super(key: key);
+
+  dynamic imgUrl = '';
   Storage storage = Storage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          FirebaseFirestore.instance
+              .collection("products")
+              .doc(id)
+              .delete()
+              .then((_) {
+            Fluttertoast.showToast(msg: name + ' deleted successfully');
+            FirebaseStorage.instance.refFromURL(imgUrl).delete();
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
+          });
+        },
+        backgroundColor: Colors.brown.shade300,
+        child: const Icon(
+          Icons.delete,
+          color: Color.fromARGB(255, 48, 10, 3),
+        ),
+      ),
       body: Column(
         children: [
           Container(
@@ -28,6 +54,7 @@ class Product extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
+                  imgUrl = snapshot.data!;
                   return Container(
                     height: 130,
                     child: Image.network(

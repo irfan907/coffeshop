@@ -11,7 +11,7 @@ class Storage {
     File file = File(filePath);
 
     try {
-      await storage.ref('products/${fileName}').putFile(file);
+      await storage.ref('products/$fileName').putFile(file);
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
