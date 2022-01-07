@@ -101,8 +101,7 @@ class _UploadState extends State<Upload> {
     // SENDING THESE VALUES TO FIRESTORE
     await firebaseFirestore
         .collection("products")
-        .doc(user!.uid)
-        .set(productModel.toMap())
+        .add(productModel.toMap())
         .then((value) =>
             {Fluttertoast.showToast(msg: "Product Uploaded Successfully")})
         .catchError((e) => {Fluttertoast.showToast(msg: e!.message)});

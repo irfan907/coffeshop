@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffeshop/screens/login.dart';
 import 'package:coffeshop/screens/upload.dart';
+import 'package:coffeshop/screens/upload_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeshop/screens/product.dart';
@@ -15,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Storage storage = Storage();
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
@@ -155,82 +157,124 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(9.0),
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          crossAxisCount: 2,
-                          children: List.generate(10, (index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: GestureDetector(
-                                onTap: () => {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Product()))
-                                },
-                                child: Card(
-                                  elevation: 5,
-                                  color: Colors.brown.shade400,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 130,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/images/logo.png'),
-                                                fit: BoxFit.contain)),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 9),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'Name',
-                                                  style: TextStyle(
-                                                      color: Colors.white70,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                          padding: const EdgeInsets.all(9.0),
+                          child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('products')
+                                .where('uid', isEqualTo: this.loggedInUser.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              return GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 200,
+                                          childAspectRatio: 2 / 2,
+                                          crossAxisSpacing: 10,
+                                          mainAxisSpacing: 10),
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (BuildContext ctx, index) {
+                                    DocumentSnapshot product =
+                                        snapshot.data!.docs[index];
+                                    return Container(
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Product()));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          color: Colors.brown.shade400,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              FutureBuilder(
+                                                future: storage.downloadURL(
+                                                    product['picture']),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<String>
+                                                        snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .done &&
+                                                      snapshot.hasData) {
+                                                    return Container(
+                                                      height: 130,
+                                                      child: Image.network(
+                                                        snapshot.data!,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      !snapshot.hasData) {
+                                                    return CircularProgressIndicator();
+                                                  }
+                                                  return Container();
+                                                },
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 9),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          product['name'],
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white70,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          '\$18',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .brown
+                                                                  .shade900,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                                Text(
-                                                  '\$18',
-                                                  style: TextStyle(
-                                                      color:
-                                                          Colors.brown.shade900,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
+                                      ),
+                                    );
+                                  });
+                            },
+                          )),
                     ],
                   ),
                 ),
