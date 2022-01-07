@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeshop/screens/login.dart';
+import 'package:coffeshop/models/user_model.dart';
 import 'package:coffeshop/screens/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Upload extends StatefulWidget {
   @override
@@ -8,6 +13,31 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
+
+  void logOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove('email');
+    Fluttertoast.showToast(msg: "Logout Successfully");
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +70,7 @@ class _UploadState extends State<Upload> {
                       width: 20,
                     ),
                     Text(
-                      'M Irfan',
+                      '${loggedInUser.name}',
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -82,8 +112,7 @@ class _UploadState extends State<Upload> {
                 // ...
                 // Then close the drawer
                 Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Login()));
+                logOut(context);
               },
             ),
           ],
