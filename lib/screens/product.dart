@@ -38,7 +38,10 @@ class Product extends StatelessWidget {
                 }
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     !snapshot.hasData) {
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: SizedBox(
+                        height: 35, child: CircularProgressIndicator()),
+                  );
                 }
                 return Container();
               },
