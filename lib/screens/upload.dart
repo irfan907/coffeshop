@@ -194,127 +194,130 @@ class _UploadState extends State<Upload> {
       body: Container(
         color: Colors.brown.shade100,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.all(12),
-                  child: Card(
-                    color: Colors.brown.shade200,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 40, bottom: 40, left: 20, right: 20),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Enter Product Details',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown.shade900),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            TextFormField(
-                              autofocus: false,
-                              controller: nameController,
-                              textInputAction: TextInputAction.next,
-                              onSaved: (value) {
-                                nameController.text = value!;
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Product Name cannot be empty";
-                                }
-                                return null;
-                              },
-                              decoration:
-                                  InputDecoration(labelText: 'Product Name'),
-                            ),
-                            TextFormField(
-                              autofocus: false,
-                              controller: priceController,
-                              textInputAction: TextInputAction.next,
-                              onSaved: (value) {
-                                priceController.text = value!;
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Price cannot be empty";
-                                }
-                                return null;
-                              },
-                              decoration:
-                                  InputDecoration(labelText: 'Product Price'),
-                            ),
-                            TextFormField(
-                              autofocus: false,
-                              controller: descriptionController,
-                              textInputAction: TextInputAction.next,
-                              onSaved: (value) {
-                                descriptionController.text = value!;
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Description cannot be empty";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  labelText: 'Product Description'),
-                            ),
-                            TextFormField(
-                              autofocus: false,
-                              controller: volumeController,
-                              textInputAction: TextInputAction.done,
-                              onSaved: (value) {
-                                volumeController.text = value!;
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Volume cannot be empty";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(labelText: 'Volume'),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  pickImage(context);
-                                },
-                                child: Text('Choose image')),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 45,
-                              child: ElevatedButton(
-                                onPressed: () => {upload(context)},
-                                child: Text(
-                                  'Upload Product',
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 3,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15))),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.all(12),
+                    child: Card(
+                      color: Colors.brown.shade200,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 40, bottom: 40, left: 20, right: 20),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Text(
+                                'Enter Product Details',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.brown.shade900),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                height: 30,
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                controller: nameController,
+                                textInputAction: TextInputAction.next,
+                                onSaved: (value) {
+                                  nameController.text = value!;
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Product Name cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                decoration:
+                                    InputDecoration(labelText: 'Product Name'),
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                controller: priceController,
+                                textInputAction: TextInputAction.next,
+                                onSaved: (value) {
+                                  priceController.text = value!;
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Price cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                decoration:
+                                    InputDecoration(labelText: 'Product Price'),
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                controller: descriptionController,
+                                textInputAction: TextInputAction.next,
+                                onSaved: (value) {
+                                  descriptionController.text = value!;
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Description cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    labelText: 'Product Description'),
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                controller: volumeController,
+                                textInputAction: TextInputAction.done,
+                                onSaved: (value) {
+                                  volumeController.text = value!;
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Volume cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                decoration:
+                                    InputDecoration(labelText: 'Volume'),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    pickImage(context);
+                                  },
+                                  child: Text('Choose image')),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () => {upload(context)},
+                                  child: Text(
+                                    'Upload Product',
+                                    style: TextStyle(fontSize: 22),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 3,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15))),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

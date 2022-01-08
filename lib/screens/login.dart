@@ -18,10 +18,11 @@ class _LoginState extends State<Login> {
 
   void logIn(BuildContext context, String email, String password) async {
     if (_formKey.currentState!.validate()) {
+      Fluttertoast.showToast(msg: 'Loading');
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-                Fluttertoast.showToast(msg: 'Logging in'),
+                Fluttertoast.showToast(msg: 'Logged in'),
                 saveTosharedPref(),
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => Home()))
@@ -94,6 +95,7 @@ class _LoginState extends State<Login> {
                     ),
                     TextFormField(
                       autofocus: false,
+                      obscureText: true,
                       controller: passwordController,
                       onSaved: (value) => {passwordController.text = value!},
                       decoration: InputDecoration(labelText: 'Password'),
